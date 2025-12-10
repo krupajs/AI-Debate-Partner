@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Agent Debate Partner</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="app-title">
+                    <span class="icon">🎯</span>
+                    Multi-Agent Debate Partner
+                </h1>
+                <div class="header-stats" id="headerStats">
+                    <div class="stat">
+                        <span class="stat-label">Round:</span>
+                        <span class="stat-value" id="roundCounter">0</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Phase:</span>
+                        <span class="stat-value" id="phaseIndicator">Setup</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Topic:</span>
+                        <span class="stat-value" id="topicDisplay">Not Set</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Setup Panel -->
+            <div class="setup-panel" id="setupPanel">
+                <div class="setup-content">
+                    <h2>Start Your Debate Session</h2>
+                    <p class="setup-description">
+                        Choose a topic and position to begin an engaging debate with our AI partner.
+                        The AI will dynamically adapt its strategy based on your arguments.
+                    </p>
+                    
+                    <div class="setup-form">
+                        <div class="form-group">
+                            <label for="topicSelect">Topic Category:</label>
+                            <select id="topicSelect" class="form-control">
+                                <option value="general">General Topics</option>
+                                <option value="technology">Technology & AI</option>
+                                <option value="environment">Environment & Climate</option>
+                                <option value="politics">Politics & Society</option>
+                                <option value="ethics">Ethics & Philosophy</option>
+                                <option value="education">Education</option>
+                                <option value="health">Health & Medicine</option>
+                                <option value="economics">Economics</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="difficultySelect">Difficulty Level:</label>
+                            <select id="difficultySelect" class="form-control">
+                                <option value="easy">Easy - Simple arguments</option>
+                                <option value="moderate" selected>Moderate - Balanced challenge</option>
+                                <option value="hard">Hard - Complex reasoning required</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="customTopic">Custom Topic (Optional):</label>
+                            <input type="text" id="customTopic" class="form-control" 
+                                   placeholder="Enter your own debate topic...">
+                        </div>
+                        
+                        <button id="startDebateBtn" class="btn btn-primary">
+                            <span class="btn-icon">🚀</span>
+                            Start Debate Session
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Interface -->
+            <div class="chat-container" id="chatContainer" style="display: none;">
+                <!-- Messages Area -->
+                <div class="messages-area" id="messagesArea">
+                    <div class="messages-list" id="messagesList">
+                        <!-- Messages will be dynamically added here -->
+                    </div>
+                </div>
+                
+                <!-- Input Area -->
+                <div class="input-area">
+                    <div class="input-container">
+                        <div class="input-group">
+                            <textarea id="messageInput" 
+                                    class="message-input" 
+                                    placeholder="Type your argument or click the mic to speak..."
+                                    rows="3"></textarea>
+                            <div class="input-actions">
+                                <button id="voiceBtn" class="btn btn-voice" title="Voice input">
+                                    <span class="btn-icon" id="voiceIcon">🎤</span>
+                                    <span id="voiceText">Voice</span>
+                                </button>
+                                <button id="sendBtn" class="btn btn-primary">
+                                    <span class="btn-icon">📤</span>
+                                    Send
+                                </button>
+                                <button id="coachBtn" class="btn btn-secondary" title="Get coaching tips">
+                                    <span class="btn-icon">💡</span>
+                                    Coach
+                                </button>
+                                <button id="endDebateBtn" class="btn btn-danger" title="End debate">
+                                    <span class="btn-icon">🏁</span>
+                                    End
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loading Indicator -->
+            <div class="loading-overlay" id="loadingOverlay">
+                <div class="loading-content">
+                    <div class="spinner"></div>
+                    <p>AI is thinking...</p>
+                </div>
+            </div>
+        </main>
+
+        <!-- Side Panel for Agent Info -->
+        <aside class="side-panel" id="sidePanel">
+            <div class="panel-header">
+                <h3>Active Agent</h3>
+            </div>
+            <div class="panel-content">
+                <div class="agent-info" id="agentInfo">
+                    <div class="agent-avatar">🤖</div>
+                    <div class="agent-details">
+                        <h4 id="agentName">Moderator</h4>
+                        <p id="agentRole">Managing debate flow</p>
+                        <div class="confidence-bar">
+                            <div class="confidence-label">Confidence:</div>
+                            <div class="confidence-meter">
+                                <div class="confidence-fill" id="confidenceFill" style="width: 0%"></div>
+                            </div>
+                            <span class="confidence-value" id="confidenceValue">0%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="panel-section">
+                    <h4>Reasoning</h4>
+                    <p id="agentReasoning">Waiting for interaction...</p>
+                </div>
+                
+                <div class="panel-section">
+                    <h4>Voice Settings</h4>
+                    <div class="voice-settings">
+                        <label class="setting-item">
+                            <input type="checkbox" id="autoSendVoice">
+                            <span>Auto-send after voice input</span>
+                        </label>
+                        <label class="setting-item">
+                            <input type="checkbox" id="continuousListening">
+                            <span>Continuous listening mode</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="panel-section">
+                    <h4>Quick Actions</h4>
+                    <div class="quick-actions">
+                        <button class="quick-action-btn" data-action="feedback">
+                            <span>📊</span> Get Feedback
+                        </button>
+                        <button class="quick-action-btn" data-action="summary">
+                            <span>📝</span> Summarize
+                        </button>
+                        <button class="quick-action-btn" data-action="new-topic">
+                            <span>🔄</span> New Topic
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Modal for Evaluations -->
+        <div class="modal" id="evaluationModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Debate Evaluation</h3>
+                    <button class="close-btn" id="closeModalBtn">&times;</button>
+                </div>
+                <div class="modal-body" id="evaluationContent">
+                    <!-- Evaluation content will be inserted here -->
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" id="newDebateBtn">Start New Debate</button>
+                    <button class="btn btn-primary" id="closeEvalBtn">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toastContainer">
+        <!-- Toast messages will appear here -->
+    </div>
+
+    <!-- Listening Indicator -->
+    <div class="listening-indicator" id="listeningIndicator">
+        <div class="mic-animation"></div>
+        <span id="listeningText">Listening...</span>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/speech.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/debate.js"></script>
+    <script src="js/ui.js"></script>
+</body>
+</html>
